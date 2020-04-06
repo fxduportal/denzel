@@ -1,0 +1,27 @@
+image:
+  file: Dockerfile
+tasks:
+     - init : npm i
+     - command : echo "n" | sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && echo "bash -c zsh" >> ~/.bashrc  && clear && zsh
+
+vscode:
+  extensions:
+    - RandomFractalsInc.vscode-data-preview@1.49.0:dA73akXFBUMCwgMvOyWEqQ==
+    - dbaeumer.vscode-eslint@1.9.1:YVcwmzKVVl+zZ+wMB02GjQ==
+    - MULU-github.jsflowchart@0.1.6:FxPBAl+L+8xVt+JIw02J3w==
+    - christian-kohler.npm-intellisense@1.3.0:yQtCdwoyo890Bn9NOEuEDA==
+    - ms-python.python@2019.11.49689:PSzH3BQYDjSWA7shUxi9AA==
+github:
+  prebuilds:
+    # enable for the master/default branch (defaults to true)
+    master: true
+# enable for all branches in this repo (defaults to false)
+    branches: true
+# enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+# add a check to pull requests (defaults to true)
+    addCheck: true
+# add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: false
+ports:
+  - port: 1234
