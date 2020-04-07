@@ -320,7 +320,7 @@
     "func-style": 0, // cannot activate as it breaks `export function myFunc`
 
     // this option sets a specific tab width for your code (off by default)
-    "indent": [2, 2],
+    "indent": [2, 4],
 
     // enforces spacing between keys and values in object literal properties
     "key-spacing": [2, {"beforeColon": false, "afterColon": true}],
@@ -353,7 +353,7 @@
     "no-lonely-if": 2,
 
     // disallow mixed spaces and tabs for indentation
-    "no-mixed-spaces-and-tabs": 2,
+    "no-mixed-spaces-and-tabs": 1,
 
     // disallow multiple empty lines (off by default)
     "no-multiple-empty-lines": [2, {"max": 1}],

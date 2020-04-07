@@ -5,9 +5,9 @@ const P_LIMIT = 25;
 const PORT = '9292';
 
 module.exports = {
-  IMDB_NAME_URL,
-  IMDB_TITLE_URL,
-  IMDB_URL,
-  P_LIMIT,
-  PORT
+    IMDB_NAME_URL,
+    IMDB_TITLE_URL,
+    IMDB_URL,
+    P_LIMIT,
+    PORT
 };
