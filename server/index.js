@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable indent */
 /* eslint-disable func-names */
 /* eslint-disable quote-props */
@@ -16,7 +17,6 @@ const MongoClient = require('mongodb').MongoClient;
 
 require('dotenv').config();
 const baseUrl = 'http://localhost:9292';
-const ObjectId = require('mongodb').ObjectID;
 
 //#region Server/Requests configuration
 const CONNECTION_URL = process.env.CONNECTION_URL;
@@ -30,55 +30,80 @@ app.use(require('body-parser').json());
 app.use(cors());
 app.use(helmet());
 
-let collection, database;
+let collectionAwesome, collectionMovie, database;
 
+/**
+ * Initialisation of the connection of the app to mongo
+ */
 MongoClient.connect(CONNECTION_URL, {
-    useNewUrlParser: true
+    useNewUrlParser: true, useUnifiedTopology: true
 }, (error, client) => {
     if (error) {
         throw error;
     }
     database = client.db(DATABASE_NAME);
-    collection = database.collection('movie');
+    collectionMovie = database.collection('movie');
+    collectionAwesome = database.collection('awesome');
     console.log('Connected to ' + DATABASE_NAME + ' !');
 });
 
 app.options('*', cors());
-app.get('/', (request, response) => {
-    response.send('Hello You');
-});
 
+/**
+ * Gets us all the movies, with a get request and an collection.find
+ */
 app.get('/movies', (request, response) => {
-    collection.find({}).toArray((error, result) => {
+    collectionMovie.find({}).toArray((error, result) => {
         if (error) {
-            return response.status(500).send(error);
+            error.reject();
         }
         response.send(result);
     });
 });
 
-app.get('/movies/:id', (request, response) => {
-    collection.findOne({ 'movie.id': request.params.id }, (error, result) => {
+/**
+ * Gets us a movie by its id
+ */
+app.get('/moviesId/:id', (request, response) => {
+    collectionMovie.findOne({ 'movie.id': request.params.id }, (error, result) => {
         if (error) {
-            return response.status(500).send(error);
+            error.reject();
         }
         response.send(result);
     });
 });
 
-app.get('/moviesInit/:id', (request, response) => {
-    collection.findOne({ 'movie.id': request.params.id }, (error, result) => {
+/**
+ * Gets us a movie by its title
+ */
+app.get('/moviesTitle/:title', async (request, response) => {
+    await collectionMovie.findOne({ 'title': request.params.name }, async (error, result) => {
         if (error) {
-            return response.status(500).send(error);
+            console.error(error);
         }
         response.send(result);
     });
 });
 
+/**
+ * Inserts the asked movie inside the collection movie of the db
+ */
 app.post('/movie', (request, response) => {
-    collection.insert(request.body, (error, result) => {
+    collectionMovie.insertOne(request.body, (error, result) => {
         if (error) {
-            return response.status(500).send(error);
+            error.reject();
+        }
+        response.send(result);
+    });
+});
+
+/**
+ * Inserts the asked movie inside the collection awesome of the db
+ */
+app.post('/movie/aw', (request, response) => {
+    collectionAwesome.insertOne(request.body, (error, result) => {
+        if (error) {
+            error.reject();
         }
         response.send(result);
     });
@@ -92,19 +117,41 @@ console.log(`📡 Running on port ${PORT}`);
 const init = require('./init');
 const axios = require('axios');
 
+/**
+ * Function that clean our database, gets all the data from imdb and fill up the database from the collected data
+ */
 let initDb = async () => {
     let { movies, awesome } = await init.start();
+    let counterAwesome = 0, counterMovies = 0;
 
-    collection.deleteMany({});
-    movies.forEach(movie => {
-        axios.post(baseUrl + '/movie', { movie }).then(
-            function (resp) {
-                console.log('Get response ' + resp + ' for movie ' + movie.id);
-            }).catch(function (error) {
-                console.log('Get error ' + error + ' for movie ' + movie.id);
-            });
+    collectionMovie.deleteMany({}).then(async () => {
+        console.log('🗑 Previous movies database cleaned');
+        movies.forEach(movie => {
+            try {
+                axios.post(baseUrl + '/movie', { movie });
+                counterMovies += 1;
+            } catch (error) {
+                console.error(error);
+            }
+        });
+        console.log(`🎬 ${counterMovies} movies added to the database`);
+    }, (error) => {
+        console.error(error);
+    });
+
+    collectionAwesome.deleteMany({}).then(async () => {
+        console.log('🗑 Previous awesome database cleaned');
+        awesome.forEach(movie => {
+            try {
+                axios.post(`${baseUrl}/movie/aw`, { movie });
+                counterAwesome += 1;
+            } catch (error) {
+                console.error(error);
+            }
+        });
+        console.log(`🌟 ${counterAwesome} awesome movies registered in the database`);
     });
 };
 
-initDb();
+//initDb();
 //#endregion
