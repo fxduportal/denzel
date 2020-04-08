@@ -10,8 +10,10 @@
         "express": "^4.17.1",
         "helmet": "^3.21.3",
         "mongodb": "^3.5.5",
+        "netlify-lambda": "^1.6.3",
         "p-limit": "^2.2.2",
-        "p-settle": "^4.0.0"
+        "p-settle": "^4.0.0",
+        "serverless-http": "^2.3.2"
     },
     "devDependencies": {
         "nodemon": "^2.0.2"

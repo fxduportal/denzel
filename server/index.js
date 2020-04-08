@@ -18,6 +18,7 @@ const MongoClient = require('mongodb').MongoClient;
 require('dotenv').config();
 const baseUrl = 'http://localhost:9292';
 
+
 //#region Server/Requests configuration
 const CONNECTION_URL = process.env.CONNECTION_URL;
 const DATABASE_NAME = process.env.DATABASE_NAME;
@@ -47,12 +48,22 @@ MongoClient.connect(CONNECTION_URL, {
     console.log('Connected to ' + DATABASE_NAME + ' !');
 });
 
-app.options('*', cors());
+
+//#region Serverless api
+const serverless = require('serverless-http');
+const router = express.Router();
+
+module.exports.handler = serverless(app);
+app.use('/.netlify/functions/DenzelMovie', router);
+
+//#endregion
+
+router.options('*', cors());
 
 /**
  * Gets us all the movies, with a get request and an collection.find
  */
-app.get('/movies', (request, response) => {
+router.get('/movies', (request, response) => {
     collectionMovie.find({}).toArray((error, result) => {
         if (error) {
             error.reject();
@@ -64,7 +75,7 @@ app.get('/movies', (request, response) => {
 /**
  * Gets us a movie by its id
  */
-app.get('/moviesId/:id', (request, response) => {
+router.get('/moviesId/:id', (request, response) => {
     collectionMovie.findOne({ 'movie.id': request.params.id }, (error, result) => {
         if (error) {
             error.reject();
@@ -76,7 +87,7 @@ app.get('/moviesId/:id', (request, response) => {
 /**
  * Gets us a movie by its title
  */
-app.get('/moviesTitle/:title', async (request, response) => {
+router.get('/moviesTitle/:title', async (request, response) => {
     await collectionMovie.findOne({ 'title': request.params.name }, async (error, result) => {
         if (error) {
             console.error(error);
@@ -88,7 +99,7 @@ app.get('/moviesTitle/:title', async (request, response) => {
 /**
  * Inserts the asked movie inside the collection movie of the db
  */
-app.post('/movie', (request, response) => {
+router.post('/movie', (request, response) => {
     collectionMovie.insertOne(request.body, (error, result) => {
         if (error) {
             error.reject();
@@ -100,7 +111,7 @@ app.post('/movie', (request, response) => {
 /**
  * Inserts the asked movie inside the collection awesome of the db
  */
-app.post('/movie/aw', (request, response) => {
+router.post('/movie/aw', (request, response) => {
     collectionAwesome.insertOne(request.body, (error, result) => {
         if (error) {
             error.reject();
