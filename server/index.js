@@ -40,17 +40,7 @@ let collectionAwesome, collectionMovie, database;
 /**
  * Initialisation of the connection of the app to mongo
  */
-MongoClient.connect(CONNECTION_URL, {
-    useNewUrlParser: true, useUnifiedTopology: true
-}, (error, client) => {
-    if (error) {
-        throw error;
-    }
-    database = client.db(DATABASE_NAME);
-    collectionMovie = database.collection('movie');
-    collectionAwesome = database.collection('awesome');
-    console.log('Connected to ' + DATABASE_NAME + ' !');
-});
+const mgClient = MongoClient(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 //#region Serverless api
@@ -68,6 +58,16 @@ router.options('*', cors());
  * Gets us all the movies, with a get request and an collection.find
  */
 router.get('/movies', (request, response) => {
+    mgClient.connect(error => {
+        if (error) {
+            throw error;
+        }
+        database = client.db(DATABASE_NAME);
+        collectionMovie = database.collection('movie');
+        collectionAwesome = database.collection('awesome');
+        console.log('Connected to ' + DATABASE_NAME + ' !');
+    });
+
     collectionMovie.find({}).toArray((error, result) => {
         if (error) {
             error.reject();
@@ -80,6 +80,15 @@ router.get('/movies', (request, response) => {
  * Gets us a movie by its id
  */
 router.get('/moviesId/:id', (request, response) => {
+    mgClient.connect(error => {
+        if (error) {
+            throw error;
+        }
+        database = client.db(DATABASE_NAME);
+        collectionMovie = database.collection('movie');
+        collectionAwesome = database.collection('awesome');
+        console.log('Connected to ' + DATABASE_NAME + ' !');
+    });
     collectionMovie.findOne({ 'movie.id': request.params.id }, (error, result) => {
         if (error) {
             error.reject();
@@ -92,6 +101,15 @@ router.get('/moviesId/:id', (request, response) => {
  * Gets us a movie by its title
  */
 router.get('/moviesTitle/:title', async (request, response) => {
+    mgClient.connect(error => {
+        if (error) {
+            throw error;
+        }
+        database = client.db(DATABASE_NAME);
+        collectionMovie = database.collection('movie');
+        collectionAwesome = database.collection('awesome');
+        console.log('Connected to ' + DATABASE_NAME + ' !');
+    });
     await collectionMovie.findOne({ 'title': request.params.name }, async (error, result) => {
         if (error) {
             console.error(error);
@@ -104,6 +122,15 @@ router.get('/moviesTitle/:title', async (request, response) => {
  * Inserts the asked movie inside the collection movie of the db
  */
 router.post('/movie', (request, response) => {
+    mgClient.connect(error => {
+        if (error) {
+            throw error;
+        }
+        database = client.db(DATABASE_NAME);
+        collectionMovie = database.collection('movie');
+        collectionAwesome = database.collection('awesome');
+        console.log('Connected to ' + DATABASE_NAME + ' !');
+    });
     collectionMovie.insertOne(request.body, (error, result) => {
         if (error) {
             error.reject();
@@ -116,6 +143,15 @@ router.post('/movie', (request, response) => {
  * Inserts the asked movie inside the collection awesome of the db
  */
 router.post('/movie/aw', (request, response) => {
+    mgClient.connect(error => {
+        if (error) {
+            throw error;
+        }
+        database = client.db(DATABASE_NAME);
+        collectionMovie = database.collection('movie');
+        collectionAwesome = database.collection('awesome');
+        console.log('Connected to ' + DATABASE_NAME + ' !');
+    });
     collectionAwesome.insertOne(request.body, (error, result) => {
         if (error) {
             error.reject();
@@ -136,6 +172,15 @@ const axios = require('axios');
  * Function that clean our database, gets all the data from imdb and fill up the database from the collected data
  */
 let initDb = async () => {
+    mgClient.connect(error => {
+        if (error) {
+            throw error;
+        }
+        database = client.db(DATABASE_NAME);
+        collectionMovie = database.collection('movie');
+        collectionAwesome = database.collection('awesome');
+        console.log('Connected to ' + DATABASE_NAME + ' !');
+    });
     let { movies, awesome } = await init.start();
     let counterAwesome = 0, counterMovies = 0;
 
