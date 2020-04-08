@@ -43,17 +43,17 @@ let collectionAwesome, collectionMovie, database;
 /**
  * Initialisation of the connection of the app to mongo
  */
-MongoClient.connect(CONNECTION_URL, {
-    useNewUrlParser: true, useUnifiedTopology: true
-}, (error, client) => {
-    if (error) {
-        throw error;
-    }
-    database = client.db(DATABASE_NAME);
-    collectionMovie = database.collection('movie');
-    collectionAwesome = database.collection('awesome');
-    console.log('Connected to ' + DATABASE_NAME + ' !');
-});
+// MongoClient.connect(CONNECTION_URL, {
+//     useNewUrlParser: true, useUnifiedTopology: true
+// }, (error, client) => {
+//     if (error) {
+//         throw error;
+//     }
+//     database = client.db(DATABASE_NAME);
+//     collectionMovie = database.collection('movie');
+//     collectionAwesome = database.collection('awesome');
+//     console.log('Connected to ' + DATABASE_NAME + ' !');
+// });
 
 
 //#region Serverless api
@@ -70,37 +70,82 @@ router.options('*', cors());
 /**
  * Gets us all the movies, with a get request and an collection.find
  */
-router.get('/movies', (request, response) => {
-    collectionMovie.find({}).toArray((error, result) => {
-        if (error) {
-            error.reject();
-        }
-        response.send(result);
-    });
+router.get('/movies', async (request, response) => {
+    let data = {};
+    const client = await MongoClient.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+        .catch((err) => {
+            console.log(err);
+        });
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db(DATABASE_NAME);
+        const collectionMovie = db.collection('movie');
+        data = await collectionMovie.findOne({}).toArray();
+    } catch (err) {
+        console.log(err);
+    } finally {
+        client.close();
+    }
+    if (data && data.data) {
+        return data.data;
+    }
+    return 'empty';
 });
 
 /**
  * Gets us a movie by its id
  */
-router.get('/moviesId/:id', (request, response) => {
-    collectionMovie.findOne({ 'movie.id': request.params.id }, (error, result) => {
-        if (error) {
-            error.reject();
-        }
-        response.send(result);
-    });
+router.get('/moviesId/:id', async (request, response) => {
+    let data = {};
+    const client = await MongoClient.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+        .catch((err) => {
+            console.log(err);
+        });
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db(DATABASE_NAME);
+        const collectionMovie = db.collection('movie');
+        data = await collectionMovie.findOne({ 'movie.id': request.params.id }).toArray();
+    } catch (err) {
+        console.log(err);
+    } finally {
+        client.close();
+    }
+    if (data && data.data) {
+        return data.data;
+    }
+    return 'empty';
 });
 
 /**
  * Gets us a movie by its title
  */
 router.get('/moviesTitle/:title', async (request, response) => {
-    await collectionMovie.findOne({ 'title': request.params.name }, async (error, result) => {
-        if (error) {
-            console.error(error);
-        }
-        response.send(result);
-    });
+      let data = {};
+    const client = await MongoClient.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+        .catch((err) => {
+            console.log(err);
+        });
+    if (!client) {
+        return;
+    }
+    try {
+        const db = client.db(DATABASE_NAME);
+        const collectionMovie = db.collection('movie');
+        data = await collectionMovie.findOne({ 'title': request.params.id }).toArray();
+    } catch (err) {
+        console.log(err);
+    } finally {
+        client.close();
+    }
+    if (data && data.data) {
+        return data.data;
+    }
+    return 'empty';
 });
 
 /**
