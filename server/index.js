@@ -62,7 +62,7 @@ router.get('/movies', (request, response) => {
         if (error) {
             throw error;
         }
-        database = client.db(DATABASE_NAME);
+        database = mgClient.db(DATABASE_NAME);
         collectionMovie = database.collection('movie');
         collectionAwesome = database.collection('awesome');
         console.log('Connected to ' + DATABASE_NAME + ' !');
@@ -84,7 +84,7 @@ router.get('/moviesId/:id', (request, response) => {
         if (error) {
             throw error;
         }
-        database = client.db(DATABASE_NAME);
+        database = mgClient.db(DATABASE_NAME);
         collectionMovie = database.collection('movie');
         collectionAwesome = database.collection('awesome');
         console.log('Connected to ' + DATABASE_NAME + ' !');
@@ -105,7 +105,7 @@ router.get('/moviesTitle/:title', async (request, response) => {
         if (error) {
             throw error;
         }
-        database = client.db(DATABASE_NAME);
+        database = mgClient.db(DATABASE_NAME);
         collectionMovie = database.collection('movie');
         collectionAwesome = database.collection('awesome');
         console.log('Connected to ' + DATABASE_NAME + ' !');
@@ -126,7 +126,7 @@ router.post('/movie', (request, response) => {
         if (error) {
             throw error;
         }
-        database = client.db(DATABASE_NAME);
+        database = mgClient.db(DATABASE_NAME);
         collectionMovie = database.collection('movie');
         collectionAwesome = database.collection('awesome');
         console.log('Connected to ' + DATABASE_NAME + ' !');
@@ -147,7 +147,7 @@ router.post('/movie/aw', (request, response) => {
         if (error) {
             throw error;
         }
-        database = client.db(DATABASE_NAME);
+        database = mgClient.db(DATABASE_NAME);
         collectionMovie = database.collection('movie');
         collectionAwesome = database.collection('awesome');
         console.log('Connected to ' + DATABASE_NAME + ' !');
@@ -176,7 +176,7 @@ let initDb = async () => {
         if (error) {
             throw error;
         }
-        database = client.db(DATABASE_NAME);
+        database = mgClient.db(DATABASE_NAME);
         collectionMovie = database.collection('movie');
         collectionAwesome = database.collection('awesome');
         console.log('Connected to ' + DATABASE_NAME + ' !');
