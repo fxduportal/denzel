@@ -13,7 +13,6 @@ module.exports.start = async (actor = DENZEL_IMDB_ID, metascore = METASCORE) => 
             let title = movie.title.replace(/\(([0-9]{4})\)/, '');
 
             movie.title = title.trim();
-            console.log(movie)
         });
 
         awesome.forEach(movie => {

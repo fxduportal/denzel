@@ -7,12 +7,6 @@ const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
 const { PORT } = require('./constants');
-// const {
-//     graphql,
-//     GraphQLSchema,
-//     GraphQLObjectType,
-//     GraphQLString,
-// } = require('graphql');
 const MongoClient = require('mongodb').MongoClient;
 
 require('dotenv').config();
@@ -153,5 +147,5 @@ let initDb = async () => {
     });
 };
 
-//initDb();
+initDb();
 //#endregion
