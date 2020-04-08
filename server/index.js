@@ -21,9 +21,8 @@ const baseUrl = 'http://localhost:9292';
 
 
 //#region Server/Requests configuration
-const CONNECTION_URL = process.env.CONNECTION_URL;
-console.log(CONNECTION_URL);
-const DATABASE_NAME = process.env.DATABASE_NAME;
+const CONNECTION_URL = 'mongodb+srv://fx:w0nPjxBFLVdkFmfE@denzelmovies-qt5j1.gcp.mongodb.net/test?retryWrites=true&w=majority'
+const DATABASE_NAME = 'movies';
 
 const app = express();
 
