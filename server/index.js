@@ -72,7 +72,7 @@ router.options('*', cors());
  */
 router.get('/movies', async (request, response) => {
     let data = {};
-    const client = await MongoClient.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+    const client = await MongoClient.connect(CONNECTION_URL, { useUnifiedTopology: true, useNewUrlParser: true })
         .catch((err) => {
             console.log(err);
         });
@@ -99,7 +99,7 @@ router.get('/movies', async (request, response) => {
  */
 router.get('/moviesId/:id', async (request, response) => {
     let data = {};
-    const client = await MongoClient.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+    const client = await MongoClient.connect(CONNECTION_URL, { useUnifiedTopology: true, useNewUrlParser: true })
         .catch((err) => {
             console.log(err);
         });
@@ -126,7 +126,7 @@ router.get('/moviesId/:id', async (request, response) => {
  */
 router.get('/moviesTitle/:title', async (request, response) => {
       let data = {};
-    const client = await MongoClient.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+    const client = await MongoClient.connect(CONNECTION_URL, { useUnifiedTopology: true, useNewUrlParser: true })
         .catch((err) => {
             console.log(err);
         });
