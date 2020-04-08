@@ -20,8 +20,8 @@
     },
     "main": "server/index.js",
     "scripts": {
-        "start": "node server/index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "./node_modules/.bin/netlify-lambda serve server",
+        "build": "./node_modules/.bin/netlify-lambda build server"
     },
     "repository": {
         "type": "git",

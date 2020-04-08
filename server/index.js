@@ -54,7 +54,7 @@ const serverless = require('serverless-http');
 const router = express.Router();
 
 module.exports.handler = serverless(app);
-app.use('/.netlify/functions/DenzelMovie', router);
+app.use('/.netlify/functions/index', router);
 
 //#endregion
 
