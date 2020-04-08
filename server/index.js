@@ -29,27 +29,32 @@ const app = express();
 module.exports = app;
 
 app.use(require('body-parser').json());
-app.use(cors());
+app.use(cors({
+    'allowedHeaders': ['sessionId', 'Content-Type', 'Authorization'],
+    'exposedHeaders': ['sessionId'],
+    'origin': '*',
+    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'preflightContinue': false
+}));
 app.use(helmet());
+
+let collectionAwesome, collectionMovie, database;
 
 /**
  * Initialisation of the connection of the app to mongo
  */
+MongoClient.connect(CONNECTION_URL, {
+    useNewUrlParser: true, useUnifiedTopology: true
+}, (error, client) => {
+    if (error) {
+        throw error;
+    }
+    database = client.db(DATABASE_NAME);
+    collectionMovie = database.collection('movie');
+    collectionAwesome = database.collection('awesome');
+    console.log('Connected to ' + DATABASE_NAME + ' !');
+});
 
-const client = new MongoClient(CONNECTION_URL);
-let mongoConnect = async () => {
-    await client.connect().then(() => {
-        database = client.db(DATABASE_NAME);
-        collectionMovie = database.collection('movie');
-        collectionAwesome = database.collection('awesome');
-        console.log('Connected to ' + DATABASE_NAME + ' !');
-        return {
-            database,
-            collectionMovie,
-            collectionAwesome
-        };
-    })
-};
 
 //#region Serverless api
 const serverless = require('serverless-http');
@@ -61,20 +66,6 @@ app.use('/.netlify/functions/index', router);
 //#endregion
 
 router.options('*', cors());
-
-router.get('/', (req, res) => {
-    let {
-        database,
-        collectionMovie,
-        collectionAwesome
-    } = await mongoConnect();
-    collectionMovie.find({}).toArray((error, result) => {
-        if (error) {
-            error.reject();
-        }
-        response.send(result);
-    });
-})
 
 /**
  * Gets us all the movies, with a get request and an collection.find
